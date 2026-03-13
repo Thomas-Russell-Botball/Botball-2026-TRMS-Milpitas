@@ -1,0 +1,63 @@
+Yo
+Here's a drive function tutorial
+Scroll down for turn functions
+Explanations at bottom
+
+Instead of using
+1. motor(0, 50);
+2. motor(1, 50);
+3. msleep(500);
+
+use
+#include <stdlib.h>
+1. void drive(int distance, int speed){
+2.   cmpc(0);
+3.   while(abs(gmpc(0)) < distance){
+4.     mav(0, speed);
+5.     mav(1, speed);
+6.   }
+7.   mav(0, 0);
+8.   mav(1, 0);
+9.   msleep(20);
+10. }
+
+
+Now for turn
+Instead of using
+1. motor(0, 50);
+2. motor(1, -50);
+3. msleep(500);
+
+use
+1. void turnright(int distance, int speed){
+2.   cmpc(1)
+3.   while(gmpc(1) < distance){
+4.     mav(0, -speed)
+5.     mav(1, speed)
+6.   }
+7.   mav(0, 0)
+8.   mav(1, 0)
+9.   msleep(20)
+10. }
+
+and
+
+
+1. void turnleft(int distance, int speed){
+2.   cmpc(0)
+3.   while(gmpc(0) < distance){
+4.     mav(0, speed)
+5.     mav(1, -speed)
+6.   }
+7.   mav(0, 0)
+8.   mav(1, 0)
+9.   msleep(20)
+10. }
+
+
+mav is move at velocity so it will move at the same speed no matter the battery of the motor
+gmpc gets motor position in ticks which can be translated to distance, 
+so you can edit the speed of the mav without the distance changing
+cmpc clears the motor position so it goes how much you want it to go
+finally the thing at the end is to make sure it doesn't drift to a stop
+IMPORTANT NOTE: Since we don't have batteries I can't check the conversion from ticks to degrees/centimeters, so when we get batteries I will update this.
