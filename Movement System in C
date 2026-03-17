@@ -4,55 +4,58 @@ Scroll down for turn functions
 Explanations at bottom
 
 Instead of using
-1. motor(0, 50);
-2. motor(1, 50);
-3. msleep(500);
+motor(RIGHTMOTOR, 50);
+motor(LEFTMOTOER, 50);
+msleep(500);
 
 use
-#include <stdlib.h>
-1. void drive(int distance, int speed){
-2.   cmpc(0);
-3.   while(abs(gmpc(0)) < distance){
-4.     mav(0, speed);
-5.     mav(1, speed);
-6.   }
-7.   mav(0, 0);
-8.   mav(1, 0);
-9.   msleep(20);
-10. }
+#include <std.lib>
+#define LEFTMOTOR
+#define RIGHTMOTOR
+
+void drive(int distance, int speed){
+  cmpc(RIGHTMOTOR);
+  while(abs(gmpc(RIGHTMOTOR)) < distance){
+    mav(RIGHTMOTOR, speed);
+    mav(LEFTMOTOR, speed);
+  }
+  mav(RIGHTMOTOR, 0);
+  mav(LEFTMOTOR, 0);
+  msleep(20);
+}
 
 
 Now for turn
 Instead of using
-1. motor(0, 50);
-2. motor(1, -50);
-3. msleep(500);
+motor(RIGHTMOTOR, 50);
+motor(LEFTMOTOR, -50);
+msleep(500);
 
 use
-1. void turnright(int distance, int speed){
-2.   cmpc(1)
-3.   while(gmpc(1) < distance){
-4.     mav(0, -speed)
-5.     mav(1, speed)
-6.   }
-7.   mav(0, 0)
-8.   mav(1, 0)
-9.   msleep(20)
-10. }
+void turnright(int distance, int speed){
+  cmpc(LEFTMOTOR);
+  while(gmpc(LEFTMOTOR) < distance){
+    mav(RIGHTMOTOR, -speed);
+    mav(LEFTMOTOR, speed);
+  }
+  mav(RIGHTMOTOR, 0);
+  mav(LEFTMOTOR, 0);
+  msleep(20);
+}
 
 and
 
 
-1. void turnleft(int distance, int speed){
-2.   cmpc(0)
-3.   while(gmpc(0) < distance){
-4.     mav(0, speed)
-5.     mav(1, -speed)
-6.   }
-7.   mav(0, 0)
-8.   mav(1, 0)
-9.   msleep(20)
-10. }
+void turnleft(int distance, int speed){
+  cmpc(RIGHTMOTOR);
+  while(gmpc(RIGHTMOTOR) < distance){
+    mav(RIGHTMOTOR, speed);
+    mav(LEFTMOTOR, -speed);
+  }
+  mav(RIGHTMOTOR, 0);
+  mav(LEFTMOTOR, 0);
+  msleep(20);
+}
 
 
 mav is move at velocity so it will move at the same speed no matter the battery of the motor
