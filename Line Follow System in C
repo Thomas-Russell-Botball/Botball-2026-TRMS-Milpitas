@@ -4,17 +4,20 @@ BTW we need to pop a sensor under the bot so it can actually detect the lines
 Ok here's the code
 Explanation Later
 
-1. void line_follow(int distance, int speed, int port){
-2.   cmpc(port);
-3.   while(abs(gmpc(port)) < distance){
-4.     int error = analog(0) - 1700;
-5.     float speed_mod = error * 0.05;
-6.     mav(0, speed-speed_mod);
-7.     mav(1, speed+speed_mod);
+#define LEFTMOTOR
+#define RIGHTMOTOR
+
+void line_follow(int distance, int speed, int port){
+  cmpc(port);
+  while(abs(gmpc(port)) < distance){
+    int error = analog(RIGHTMOTOR) - 1700;
+    float speed_mod = error * 0.05;
+6.     mav(RIGHTMOTOR, speed-speed_mod);
+7.     mav(LEFTMOTOR, speed+speed_mod);
 8.       }
 9.     }
-10.    mav(0, 0);
-11.    mav(1, 0);
+10.    mav(RIGHTMOTOR, 0);
+11.    mav(LEFTMOTOR, 0);
 12.    msleep(20);
 13.  }
 
