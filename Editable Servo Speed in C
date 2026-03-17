@@ -5,17 +5,17 @@ Shuld be pretty simple
 Also at the start remember to do enableservos();
 Heres the code:
 
-1. void servo(int port, int position, float time){
-2.   float start_time = seconds();
-3.   int start_pos = get_servo_position(port);
-4.   int pos_diff = position - start_pos
-5.   while(seconds() - start_time < time){
-6.     float pos_mod = (seconds()-start_time)/time;
-7.     set_servo_position(port, start_pos + (pos_diff * pos_mod))
-8.   }
-9.   set_servo_position(port, position)
-10.  msleep(50)
-11.} 
+void servo(int port, int position, float time){
+  float start_time = seconds();
+  int start_pos = get_servo_position(port);
+  int pos_diff = position - start_pos
+  while(seconds() - start_time < time){
+    float pos_mod = (seconds()-start_time)/time;
+    set_servo_position(port, start_pos + (pos_diff * pos_mod))
+  }
+  set_servo_position(port, position)
+  msleep(50)
+  } 
 
 This code basically takes a port and asks how much you want to move it and in how long
 FOR WHOEVER CALLS THEMSELVE THE LEADER OF EACH PERIOD (Looking at u dave) here's a cool website
