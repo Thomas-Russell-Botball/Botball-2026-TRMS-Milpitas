@@ -56,3 +56,43 @@ while abs(error)>0.1:
 This might feel kinda hard, so here is a nice video on it.
 https://www.youtube.com/watch?v=KMSJviT2jI8 (Seaquam Robotics)
 
+Final PID Code
+
+int pidMove(float distance, float topSpeed,float finalError){
+    cmpc();
+    float KP = 1.0;   //still need to be tuned
+    float KI = 0.1;   //still need to be tuned
+    float KD = 0.05;  //still need to be tuned
+
+    //initialization
+    float error = distance;
+    float lastError = 0;
+    float integral = 0;
+    float dt =20;
+
+        while(fabsf(error)>finalError){
+            //1. Get input
+            float position = (gmpc(0)+gmpc(1)+gmpc(2)+gmpc(3))/4*();
+            
+            //2. Calculate error
+            error = distance - position;
+            
+            //3. Calculate terms
+            integral = integral + (error * dt);
+            derivative = (error - last_error) / dt;
+            
+            //4. Calculate output
+            output = (KP * error) + (KI * integral) - (KD * derivative);
+            
+            //5. Apply output and save state
+            mav(0,output);
+            mav(1,output);
+            mav(3,output);
+            mav(4,output);
+            float lastError = error;
+            
+            //6. Wait for next time step
+            msleep(dt);
+
+        }
+}
