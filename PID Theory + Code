@@ -72,7 +72,8 @@ int pidMove(float distance, float topSpeed,float finalError){
 
         while(fabsf(error)>finalError){
             //1. Get input
-            float position = (gmpc(0)+gmpc(1)+gmpc(2)+gmpc(3))/4*();
+            float position = (gmpc(0)+gmpc(1)+gmpc(2)+gmpc(3))/4;
+            position*=(/*conversion from ticks to cm*/);
             
             //2. Calculate error
             error = distance - position;
