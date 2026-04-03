@@ -102,4 +102,9 @@ void pidMove(float distance, float topSpeed,float finalError){
             msleep(dt);
 
         }
+    freeze(0);
+    freeze(1);
+    freeze(2);
+    freeze(3);
+
 }
