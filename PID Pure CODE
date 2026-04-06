@@ -1,0 +1,71 @@
+#include <kipr/wombat.h>
+#include <stdlib.h>
+#include <math.h>
+
+void pidMove(float distance, float topSpeed,float finalError){
+    cmpc(0); cmpc(1); cmpc(2); cmpc(3);
+    float KP = 1.0;   //still need to be tuned
+    float KI = 0.01;   //still need to be tuned
+    float KD = 0.05;  //still need to be tuned
+
+    //initialization
+    float error = distance;
+    float lastError = distance;
+    float integral = 0;
+    float dt =20;
+
+        while(fabsf(error)>finalError){
+            //1. Get input
+            float position = (gmpc(0)-gmpc(1)+gmpc(2)-gmpc(3));
+            position/=4;
+            position/=2;
+            
+            //2. Calculate error
+            error = distance - position;
+             printf("%i,",gmpc(0));
+             printf("%i,",gmpc(1));
+             printf("%i,",gmpc(2));
+             printf("%i,",gmpc(3));
+            printf("\n");
+            printf("%f",position);
+            printf("\n");
+
+            
+            
+            //3. Calculate terms
+            integral = integral + (error * dt);
+            if(sgn(integral)!=sgn(error)){
+                integral = 0;
+            }
+            
+            int derivative = (error - lastError) / dt;
+            
+            //4. Calculate output
+            float output = (KP * error) + (KI * integral) - (KD * derivative);
+
+            //Makes sure speed isn't over top speed
+            if(fabs(output)>topSpeed){
+            output/=fabs(output);
+            output*= topSpeed;        
+            }
+            
+            //5. Apply output and save state  
+            mav(0,output);
+            mav(1,-output);
+            mav(2,output);
+            mav(3,-output);
+            lastError = error;
+            
+            //6. Wait for the next time step
+            msleep(dt);
+
+        }
+    freeze(0);
+    freeze(1);
+    freeze(2);
+    freeze(3);
+}
+
+int main(){
+    pidMove(-1000,1500,0.1);
+}
