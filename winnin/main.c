@@ -15,6 +15,9 @@
 #define CLAW_SERVO 0
 #define ARM_SERVO 2
 
+#define START_DELAY_MS 1200
+#define LINE_HEALTH_RECOVERY_LIMIT 20
+
 static void phase_red_pickup(void)
 {
     move_servo_smooth(ARM_SERVO, 1900, 8, 8);
@@ -59,7 +62,7 @@ static void phase_green_cube_grab(void)
         config
     );
 
-    if (line_health > 20) {
+    if (line_health > LINE_HEALTH_RECOVERY_LIMIT) {
         square_up_dual_sensors(LEFT_MOTOR_FORWARD, LEFT_MOTOR_REVERSE, RIGHT_MOTOR_FORWARD, RIGHT_MOTOR_REVERSE, LINE_SENSOR_LEFT, LINE_SENSOR_RIGHT, 2200, 4);
     }
 
@@ -75,7 +78,7 @@ int main(void)
     msleep(250);
 
     wait_for_light(5);
-    msleep(1200);
+    msleep(START_DELAY_MS);
 
     phase_red_pickup();
     phase_orange_drop();
