@@ -12,7 +12,9 @@
 #define SERVO_FRONT_LEFT 3
 
 // Sensor ports
+// Digital: start light sensor
 #define START_LIGHT_SENSOR 3
+// Analog: tophat sensors for squaring up and line follow
 #define SQUARE_LEFT_SENSOR 2
 #define LINE_SENSOR 1
 #define SQUARE_RIGHT_SENSOR 0
