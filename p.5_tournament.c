@@ -38,9 +38,9 @@ int main()
     ao();
     
     //pushpoms
-    f_b(-350,5000);
+    f_b(-350,5500);
     //comeback
-    f_b(350,5000);
+    f_b(350,5500);
     ao(); 
     //rest orientation
     f_b(200,100);
