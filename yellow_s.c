@@ -1,74 +1,67 @@
 #include <kipr/wombat.h>
 #include <stdlib.h>
 
-// Motor ports (your original)
+// Motor ports
 #define RIGHT_BACK_MOTOR 1
 #define RIGHT_FRONT_MOTOR 3
 #define LEFT_FRONT_MOTOR 0
 #define LEFT_BACK_MOTOR 2
 
-// Servo ports (your original)
+// Servo ports
 #define SERVO_FRONT_RIGHT 0
 #define SERVO_FRONT_LEFT 0
 
 #define START_LIGHT_SENSOR 3
-#define SQUARE_LEFT_SENSOR 2
 #define LINE_SENSOR 1
-#define SQUARE_RIGHT_SENSOR 0
 
-//OLD NOT WORKING VARs
-#define LINE_TARGET 3000
-#define BLACK_VALUE 1300
-
-#define LEFT_TOPHAT 3
-#define RIGHT_TOPHAT 2
-
-#define LEFT_THRESHOLD 330
-#define RIGHT_THRESHOLD 3680
-#define BASE_SPEED 2000
-#define TURN_FACTOR 1
-#define LEFT_TURN_FACTOR 0.7
+void stop() {
+    mav(RIGHT_BACK_MOTOR, 0);
+    mav(RIGHT_FRONT_MOTOR, 0);
+    mav(LEFT_FRONT_MOTOR, 0);
+    mav(LEFT_BACK_MOTOR, 0);
+}
 
 void forward(int speed, int time) {
-    motor(RIGHT_BACK_MOTOR,  speed);
-    motor(RIGHT_FRONT_MOTOR, speed);
-    motor(LEFT_FRONT_MOTOR,  speed);
-    motor(LEFT_BACK_MOTOR,  speed);
+    mav(RIGHT_BACK_MOTOR,  speed);
+    mav(RIGHT_FRONT_MOTOR, speed);
+    mav(LEFT_FRONT_MOTOR,  speed);
+    mav(LEFT_BACK_MOTOR,   speed);
     msleep(time);
 }
 
 void backward(int speed, int time) {
-    motor(RIGHT_BACK_MOTOR,  -speed);
-    motor(RIGHT_FRONT_MOTOR, -speed);
-    motor(LEFT_FRONT_MOTOR,  -speed);
-    motor(LEFT_BACK_MOTOR,   -speed);
+    mav(RIGHT_BACK_MOTOR,  -speed);
+    mav(RIGHT_FRONT_MOTOR, -speed);
+    mav(LEFT_FRONT_MOTOR,  -speed);
+    mav(LEFT_BACK_MOTOR,   -speed);
     msleep(time);
 }
 
-void right(int speed, int time) {      // turn right
-    motor(RIGHT_BACK_MOTOR,  speed);
-    motor(RIGHT_FRONT_MOTOR,  speed);
-    motor(LEFT_FRONT_MOTOR,   -speed);
-    motor(LEFT_BACK_MOTOR,   speed);
+void right(int speed, int time) {
+    mav(RIGHT_BACK_MOTOR,  speed);
+    mav(RIGHT_FRONT_MOTOR, speed);
+    mav(LEFT_FRONT_MOTOR, -speed);
+    mav(LEFT_BACK_MOTOR,   speed);
     msleep(time);
 }
 
-void left(int speed, int time) {       // turn left
-    motor(RIGHT_BACK_MOTOR,   -speed);
-    motor(RIGHT_FRONT_MOTOR, -speed);
-    motor(LEFT_FRONT_MOTOR,  speed);
-    motor(LEFT_BACK_MOTOR,    speed);
+void left(int speed, int time) {
+    mav(RIGHT_BACK_MOTOR, -speed);
+    mav(RIGHT_FRONT_MOTOR, -speed);
+    mav(LEFT_FRONT_MOTOR,  speed);
+    mav(LEFT_BACK_MOTOR,   speed);
     msleep(time);
 }
 
 void uturn(int speed, int time){
-    motor(RIGHT_BACK_MOTOR,  0);
-    motor(RIGHT_FRONT_MOTOR,  0);
-    motor(LEFT_FRONT_MOTOR,   speed);
-    motor(LEFT_BACK_MOTOR,   speed);
+    mav(RIGHT_BACK_MOTOR, 0);
+    mav(RIGHT_FRONT_MOTOR, 0);
+    mav(LEFT_FRONT_MOTOR, speed);
+    mav(LEFT_BACK_MOTOR, speed);
     msleep(time);
 }
 
+// Dozer
 void dozer(int position, int time){
     enable_servos();
     set_servo_position(SERVO_FRONT_RIGHT, position);
@@ -77,100 +70,157 @@ void dozer(int position, int time){
 }
 
 void dozerup(){
-    enable_servos();
     dozer(2300, 900);
 }
 
 void dozerdown(){
-    enable_servos();
     dozer(995, 900);
 }
 
-void stop() {
-    motor(RIGHT_BACK_MOTOR, 0);
-    motor(RIGHT_FRONT_MOTOR, 0);
-    motor(LEFT_FRONT_MOTOR, 0);
-    motor(LEFT_BACK_MOTOR, 0);
-}
-
 int main() {
-    //wait_for_light(5);
+    //wait_for_light(START_LIGHT_SENSOR);
     shut_down_in(118);
-    
+   
     // === START SEQUENCE ===
-    //dozerup();                    // Raise bulldozer once
-    dozerdown();                  // Lower to scooping position
-    
-		//motor(0,1000);
-		//motor(3,-1000);
-		//msleep(400);
-
-		//forward(100, 200);
-		//msleep(300);
-
-		//motor(0,1000);
-		//motor(3,-1000);
-		//msleep(300);
-
-    // Drive forward past first black line
-    forward(80, 4500);
-    msleep(330);
-    
-		//stop();
-		//msleep(10000);
-    // Turn right toward the pom/cone line
-    right(100, 800);
-    msleep(250);
-    
-    // Drive forward scooping blue poms + cones
-    forward(75, 6200);
-    msleep(300);
-    
-    // U-turn after grabbing second cone
-    right(100, 450);
-    msleep(300);
-
-		forward(75,1000);
+    dozerdown();
 		msleep(300);
+		dozerup();               // Lower to scooping position
+    msleep(300);
+    // Drive forward past first black line
+    forward(900, 4550);
+    msleep(330);
+   
+    // Turn right toward the pom/cone line
+    right(800, 300);
+    msleep(100);
 
-		right(100, 450);
+		forward(900, 300);
+    msleep(200);
+
+		right(800, 900);
+    msleep(300);
+
+		forward(850, 1000);
+    msleep(300);
+
+		right(800, 100);
+    msleep(300);
+
+    // Drive forward scooping blue poms + cones
+    forward(850, 1000);
+    msleep(300);
+
+		right(800, 55);
+    msleep(300);
+
+		forward(850, 4200);
     msleep(300);
     
-    // Continue on line scooping orange poms
-    forward(75, 6300);
+		forward(850, 4200);
     msleep(300);
-    
+
+		right(800, 10);
+    msleep(200);
+
+		forward(1050, 3950);
+    msleep(700);
+
+    right(800, 450);
+    msleep(300);
+    forward(800, 500);
+    msleep(200);
+    right(800, 2600);
+    msleep(1300);
+		stop();
+
+		ao();
+		msleep(2000);
+   
+    // Return
+    forward(850, 3000);
+    msleep(500);
+
+		left(800, 200);
+
+		forward(900, 7500);
+    msleep(500);
+
+		right(800, 400); 
+
+		forward(900, 7500);
+    msleep(7000);
     // Turn left at end of board
-    left(100, 1050);
-    msleep(250);
-    
+    left(800, 1050);
+    msleep(500);
+
+		//right(800, 100);
+		//msleep(200);
+   
     // Drive into Lower Start Box
-    forward(70, 2400);
-    msleep(300);
-    
+    forward(800, 5000);
+    msleep(5000);
+   
     // Semi-raise dozer to drop poms and cone
     dozer(1650, 600);
     msleep(400);
-    
+
+		forward(800, 2000);
+		msleep(800);
+   
     // === KNOCK DOWN 3-CUBE TOWER ===
-    forward(100, 850);      // Ram into front of box
-    msleep(200);
+   
+    //left(700, 450);
+    //msleep(200);
+   
+	  //dozerup();
+
+		//forward(800, 2000);
+		//msleep(800);
     
-    dozer(1950, 500);       // Raise dozer a bit
+		backward(900, 4550);
+    msleep(4000);
+
+		dozerup();
+
+    left(1200, 2400);
+		msleep(1200);
+
+		ao();
+		msleep(1000);
+
+		forward(850, 4200);
+    msleep(800);
+
+		right(850, 700);
+		msleep(600);
+
+		forward(850, 2000);
+    msleep(600);
+
+		right(850, 300);
+		msleep(600);
+   
+	  forward(850, 3200);
+    msleep(400);
+		left(800, 1050);
+    msleep(500);
+   
+    // Drive into Lower Start Box
+    forward(800, 2400);
     msleep(300);
-    
-    left(80, 450);          // Slight left turn to knock tower
-    msleep(200);
-    
-    backward(80, 650);      // Back up
-    msleep(200);
-    
-    forward(90, 950);       // Final ram to square up
-    
-    // Final park position
+   
+    // Semi-raise dozer to drop poms and cone
+    dozer(1650, 600);
+		dozerdown();
+    msleep(400);
+
+
+    // EXTRA STUFF
+
+
     dozerup();
     stop();
     disable_servos();
-    
+   
     return 0;
 }
