@@ -80,7 +80,7 @@ void dozerdown(){
 }
 
 int main() {
-    //wait_for_light(START_LIGHT_SENSOR);
+    wait_for_light(5);
     shut_down_in(118);
    
     // === START SEQUENCE ===
